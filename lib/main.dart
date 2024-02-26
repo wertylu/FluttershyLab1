@@ -19,21 +19,23 @@ class NissanGTRR35App extends StatefulWidget {
   const NissanGTRR35App({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _NissanGTRR35AppState createState() => _NissanGTRR35AppState();
+  State<NissanGTRR35App> createState() => _NissanGTRR35AppState();
 }
 
 class _NissanGTRR35AppState extends State<NissanGTRR35App> {
-  String _displayText = 'Який мотор в Nissan GTR R35?';
+  String _displayText = 'Which engine does Nissan GTR R35 has?';
+  bool _showImage = false;
 
   void _updateDisplayText(String value) {
-    if (value.trim().toUpperCase() == 'VR36') {
+    if (value.trim().toUpperCase() == 'VR38DETT') {
       setState(() {
-        _displayText = 'Bro got knowledge balls';
+        _displayText = 'Hooray, the answer is correct,here is the image';
+        _showImage = true;
       });
     } else {
       setState(() {
-        _displayText = 'not wirno';
+        _displayText = 'not correct';
+        _showImage = false;
       });
     }
   }
@@ -47,7 +49,12 @@ class _NissanGTRR35AppState extends State<NissanGTRR35App> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
+            if (_showImage)
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Image.asset('assets/vr38dett_engine.jpg'),
+              ),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Text(_displayText, style: const TextStyle(fontSize: 20)),
@@ -55,7 +62,7 @@ class _NissanGTRR35AppState extends State<NissanGTRR35App> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: TextField(
-                key: const Key('inputField'), // Use key in widget constructors
+                key: const Key('inputField'),
                 decoration: const InputDecoration(
                   labelText: 'Введіть відповідь',
                   border: OutlineInputBorder(),
