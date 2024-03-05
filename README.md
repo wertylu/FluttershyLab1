@@ -1,17 +1,5 @@
-# my_project
+![image](https://github.com/wertylu/FluttershyLab1/assets/89530439/71ac266f-900d-4b0b-95e1-9836d1b8ec3a)
 
-A new Flutter project.
+![image](https://github.com/wertylu/FluttershyLab1/assets/89530439/1d412b65-c6c0-4fa8-b220-8a046730bacf)
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# FluttershyLab1" 
+![image](https://github.com/wertylu/FluttershyLab1/assets/89530439/87bed163-4850-433a-9e75-e8680f03afb8)
