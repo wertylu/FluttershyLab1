@@ -1,17 +1,21 @@
 
 import 'package:flutter/material.dart';
-
 class TextArea extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
-  const TextArea({required this.hintText, super.key,
-    this.obscureText = false, this.controller,});
+  const TextArea({
+    required this.hintText, super.key,
+    this.obscureText = false,
+    this.controller,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
@@ -27,6 +31,7 @@ class TextArea extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
       ),
+      validator: validator, // Apply validator
     );
   }
 }

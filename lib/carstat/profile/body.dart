@@ -14,8 +14,7 @@ class ProfileBody extends StatelessWidget {
           Center(
             child: CircleAvatar(
               radius: ScreenProf.avatarRadius(context),
-              backgroundImage:
-                  const NetworkImage('https://via.placeholder.com/150'),
+              backgroundImage: const AssetImage('assets/placeholder.png'),
             ),
           ),
           const SizedBox(height: 20),

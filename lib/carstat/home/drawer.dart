@@ -8,6 +8,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      width: 220,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -15,7 +16,7 @@ class CustomDrawer extends StatelessWidget {
             accountName: Text('User Name'),
             accountEmail: Text('user@example.com'),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+              backgroundImage: AssetImage('assets/placeholder.png'),
             ),
             decoration: BoxDecoration(
               color: Colors.deepPurple,
