@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_project/carstat/logic/models/user.dart';
 import 'package:my_project/carstat/logic/services/authentication/user_service.dart';
