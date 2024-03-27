@@ -1,5 +1,5 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-// import 'package:my_project/carstat/app/home_page.dart';
 import 'package:my_project/carstat/app/register.dart';
 import 'package:my_project/carstat/logic/services/authentication/authenication_service.dart';
 import 'package:my_project/carstat/login_register/button.dart';
@@ -24,20 +24,66 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _attemptLogin() async {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    final loggedIn = await _authService.login(email, password);
-
-    if (mounted) {
-      if (loggedIn) {
-        Navigator.pushReplacementNamed(context, '/');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid email or password')),
+  void _showNoInternetDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('No Internet Connection'),
+          content: const Text('You are not connected to the internet. '
+              'Please check your connection and try again.'),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
+      },
+    );
+  }
+
+  void _attemptLogin() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      _showNoInternetDialog();
+    } else {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      final loggedIn = await _authService.login(email, password);
+
+      if (mounted) {
+        if (loggedIn) {
+          Navigator.pushReplacementNamed(context, '/home');
+          _showDialog('Success', 'You have successfully logged in.');
+        } else {
+          _showDialog('Failed', 'Invalid email or password.');
+        }
       }
     }
+  }
+
+  void _showDialog(String title, String content) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
