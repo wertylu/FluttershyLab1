@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
         return AlertDialog(
           title: const Text('No Internet Connection'),
           content: const Text('You are not connected to the internet. '
-              'Please check your connection and try again.'),
+              'Please check your connection.'),
           actions: [
             TextButton(
               child: const Text('OK'),

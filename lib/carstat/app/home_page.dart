@@ -17,13 +17,6 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late final ICarService _carService;
   late Future<List<Car>> _carListFuture;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _carService = CarService();
-  //   _carListFuture = _carService.loadCarList();
-  // }
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
@@ -66,6 +59,7 @@ class _MainPageState extends State<MainPage> {
     _connectivitySubscription.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,32 +76,37 @@ class _MainPageState extends State<MainPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            final cars = snapshot.data!;
+            return ListView.builder(
+              itemCount: cars.length,
+              itemBuilder: (context, index) {
+                final car = cars[index];
+                return ListTile(
+                  title: Text('${car.make} ${car.model}'),
+                  subtitle: Text(
+                      'Year: ${car.year} - Mileage: ${car.mileage} - 0 to 60: ${car.zero_to_sixty}s'),
+                  trailing: Wrap(
+                    spacing: 12,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () async {
+                          await _carService.deleteCar(car.id); // Assuming `deleteCar` method uses the car's id
+                          refreshCars(); // Call `refreshCars` to update the list after deletion
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          } else {
             return const Center(child: Text('No cars added yet.'));
           }
-          final cars = snapshot.data!;
-          return ListView.builder(
-            itemCount: cars.length,
-            itemBuilder: (context, index) {
-              final car = cars[index];
-              return ListTile(
-                title: Text('${car.make} ${car.model}'),
-                subtitle: Text(
-                    'Year: ${car.year} - Mileage: ${car.mileage} - 0 to 60: '
-                        '${car.zeroToSixty}s'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () async {
-                    await _carService.deleteCar(index);
-                    refreshCars();
-                  },
-                ),
-              );
-            },
-          );
         },
-
       ),
       bottomNavigationBar: CustomBottomAppBar(
         onAddPressed: () async {

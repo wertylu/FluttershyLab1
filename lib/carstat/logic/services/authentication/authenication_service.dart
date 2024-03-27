@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_project/carstat/logic/models/user.dart';
 import 'package:my_project/carstat/logic/services/authentication/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,20 +12,34 @@ abstract class IAuthService {
 }
 
 class AuthService implements IAuthService {
-  final IUserService _userStorageService = UserService();
+  final UserService _userService = UserService();
+  final String _baseUrl = 'http://10.0.2.2:8080/api/users';
 
   @override
   Future<String?> register(String name, String email, String password) async {
-    if (!email.contains('@') || name.isEmpty) {
-      return 'Invalid input';
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      return 'No internet connection. '
+          'Please connect to the internet to sign up.';
     }
-    final existingUser = await _userStorageService.getUser(email);
-    if (existingUser != null) {
-      return 'User already exists';
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/create'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': name,
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final newUser = User(name: name, email: email, password: password);
+      await _userService.saveUser(newUser);
+      return null;
+    } else {
+      return 'Failed to register user';
     }
-    final newUser = User(name: name, email: email, password: password);
-    await _userStorageService.saveUser(newUser);
-    return null;
   }
 
   @override
