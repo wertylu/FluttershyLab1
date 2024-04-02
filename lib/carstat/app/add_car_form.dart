@@ -11,6 +11,7 @@ class AddCarFormPage extends StatefulWidget {
 
 class _AddCarFormPageState extends State<AddCarFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final _idController = TextEditingController();
   final _yearController = TextEditingController();
   final _mileageController = TextEditingController();
   final _makeController = TextEditingController();
@@ -20,15 +21,17 @@ class _AddCarFormPageState extends State<AddCarFormPage> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final newCar = Car(
+        id: int.parse(_idController.text),
         year: int.parse(_yearController.text),
         mileage: int.parse(_mileageController.text),
         make: _makeController.text,
         model: _modelController.text,
-        zeroToSixty: double.parse(_zeroToSixtyController.text),
+        zero_to_sixty: double.parse(_zeroToSixtyController.text),
       );
 
       CarService().addCar(newCar).then((_) => Navigator.pop(context));
     }
+
   }
 
   @override
@@ -40,6 +43,17 @@ class _AddCarFormPageState extends State<AddCarFormPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'id'),
+              controller: _idController,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the car id';
+                }
+                return null;
+              },
+            ),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Year'),
               controller: _yearController,

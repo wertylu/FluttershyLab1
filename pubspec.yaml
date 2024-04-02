@@ -15,14 +15,10 @@ dependencies:
 
 
   url_launcher: ^6.2.5
-  flutter_bloc: ^8.0.1
-  flutter_screenutil: ^5.0.0+2
   cupertino_icons: ^1.0.6
   shared_preferences: ^2.2.2
-  flutter_secure_storage: ^9.0.0
   connectivity_plus: ^5.0.2
-  provider: ^6.1.2
-  get: ^4.6.5
+  http: ^1.2.1
 
 dev_dependencies:
   flutter_test:

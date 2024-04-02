@@ -16,45 +16,53 @@ class _AutologinPageState extends State<AutologinPage> {
     _navigateToNextPage();
   }
 
-  Future<void> _navigateToNextPage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getString('currentUser') != null;
-    final connectivityResult = await (Connectivity().checkConnectivity());
-
-    if (isLoggedIn) {
-      if (connectivityResult == ConnectivityResult.none) {
-        _connectionTroubles();
-      }
-      if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
-      }
-    } else {
-      if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/login');
-      }
-    }
-  }
-
-  void _connectionTroubles() {
+  void _showConnectivityDialog() {
     showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('No Internet'),
-          content:
-          const Text('You are logged in but no internet.'
-              ' Some features may or may not be available.'),
-          actions: [
+          title: const Text('No Internet Connection'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('You are logged in but not connected to the internet.'),
+                Text('Some features may not be available.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
             TextButton(
               child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pushReplacementNamed('/home');
               },
             ),
           ],
         );
       },
     );
+  }
+
+  Future<void> _navigateToNextPage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getString('currentUser') != null;
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    if (isLoggedIn) {
+      if (connectivityResult == ConnectivityResult.none) {
+        _showConnectivityDialog();
+      } else {
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed('/home');
+        }
+      }
+    } else {
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/login');
+      }
+    }
   }
 
   @override

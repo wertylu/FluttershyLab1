@@ -84,7 +84,7 @@ class _UserProfilePageState extends State<ProfilePage> {
         actions: [
           TextButton(
             onPressed: _showLogoutConfirmationDialog,
-            child: const Text('Log Out'),
+            child: const Text('Log Out',style: TextStyle(color: Colors.white),),
           ),
         ],
       ),
@@ -132,7 +132,7 @@ class _UserProfilePageState extends State<ProfilePage> {
           ],
         )
             : const Column(),
-      ),// Use the separated ProfileBody widget
+      ),
     );
   }
 }
