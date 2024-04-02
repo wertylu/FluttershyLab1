@@ -60,4 +60,18 @@ class AuthService implements IAuthService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('currentUser');
   }
+
+  Future<User?> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastLoggedInUserEmail = prefs.getString('currentUser');
+    if (lastLoggedInUserEmail != null) {
+      final userString = prefs.getString(lastLoggedInUserEmail);
+      if (userString != null) {
+        final Map<String, dynamic> userMap =
+        jsonDecode(userString) as Map<String, dynamic>;
+        return User.fromJson(userMap);
+      }
+    }
+    return null;
+  }
 }

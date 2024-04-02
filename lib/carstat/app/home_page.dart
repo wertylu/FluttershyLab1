@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_project/carstat/app/add_car_form.dart';
+import 'package:my_project/carstat/bloc/home/car_bloc.dart';
+import 'package:my_project/carstat/bloc/home/car_events.dart';
+import 'package:my_project/carstat/bloc/home/car_states.dart';
 import 'package:my_project/carstat/home/bottom_part.dart';
 import 'package:my_project/carstat/home/drawer.dart';
-import 'package:my_project/carstat/logic/models/car.dart';
-import 'package:my_project/carstat/logic/services/car/car_service.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -15,15 +17,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late final ICarService _carService;
-  late Future<List<Car>> _carListFuture;
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  late CarBloc _carBloc;
 
   @override
   void initState() {
     super.initState();
-    _carService = CarService();
-    _carListFuture = _carService.loadCarList();
+    _carBloc = context.read<CarBloc>();
+    _carBloc.add(LoadCar());
     _connectivitySubscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
@@ -71,40 +72,36 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.deepPurple,
       ),
       drawer: const CustomDrawer(),
-      body: FutureBuilder<List<Car>>(
-        future: _carListFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<CarBloc, CarState>(
+        builder: (context, state) {
+          if (state is CarLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            final cars = snapshot.data!;
+          } else if (state is CarLoaded) {
+            final cars = state.carList;
+            if (cars.isEmpty) {
+              return const Center(child: Text('No cars added yet.'));
+            }
             return ListView.builder(
               itemCount: cars.length,
               itemBuilder: (context, index) {
                 final car = cars[index];
                 return ListTile(
                   title: Text('${car.make} ${car.model}'),
-                  subtitle: Text(
-                      'Year: ${car.year} - Mileage: ${car.mileage} - 0 to 60: ${car.zero_to_sixty}s'),
-                  trailing: Wrap(
-                    spacing: 12,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () async {
-                          await _carService.deleteCar(car.id); // Assuming `deleteCar` method uses the car's id
-                          refreshCars(); // Call `refreshCars` to update the list after deletion
-                        },
-                      ),
-                    ],
+                  subtitle: Text('Year: ${car.year} - Mileage: ${car.mileage} '
+                      '- 0 to 60: ${car.zero_to_sixty}s'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      context.read<CarBloc>().add(DeleteCar(car.id));
+                    },
                   ),
                 );
               },
             );
+          } else if (state is CarLoadFailure) {
+            return Center(child: Text('Error: ${state.error}'));
           } else {
-            return const Center(child: Text('No cars added yet.'));
+            return const Center(child: Text('Unexpected state'));
           }
         },
       ),
@@ -114,15 +111,9 @@ class _MainPageState extends State<MainPage> {
             context,
             MaterialPageRoute<void>(builder: (_) => const AddCarFormPage()),
           );
-          refreshCars();
+          context.read<CarBloc>().add(LoadCar());
         },
       ),
     );
-  }
-
-  void refreshCars() {
-    setState(() {
-      _carListFuture = _carService.loadCarList();
-    });
   }
 }

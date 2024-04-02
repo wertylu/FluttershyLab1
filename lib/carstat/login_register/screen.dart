@@ -9,7 +9,8 @@ class ScreenSettings {
 
   static void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
-    final bool isLandscape = _mediaQueryData.size.width > _mediaQueryData.size.height;
+    final bool isLandscape = _mediaQueryData.size.width >
+        _mediaQueryData.size.height;
     logoSize = _mediaQueryData.size.width < 600 ? 80.0 : 120.0;
     spacing = _mediaQueryData.size.height / (isLandscape ? 40 : 30);
     fontSize = _mediaQueryData.size.width < 600 ? 20.0 : 24.0;

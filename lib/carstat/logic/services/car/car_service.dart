@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_project/carstat/logic/models/car.dart';
 import 'package:my_project/carstat/logic/services/car/car_local_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,8 +18,6 @@ class CarService implements ICarService{
   static const String baseUrl = 'http://10.0.2.2:8080/api/car_data';
   static const _carKey = 'carKey';
   CarLocalStorage carLocalStorage= CarLocalStorage();
-
-
 
   @override
   Future<List<Car>> loadCarList() async {
