@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_project/carstat/bloc/home/car_bloc.dart';
+import 'package:my_project/carstat/bloc/home/car_events.dart';
 import 'package:my_project/carstat/logic/models/car.dart';
-import 'package:my_project/carstat/logic/services/car/car_service.dart';
+
 
 class AddCarFormPage extends StatefulWidget {
   const AddCarFormPage({super.key});
@@ -28,8 +31,8 @@ class _AddCarFormPageState extends State<AddCarFormPage> {
         model: _modelController.text,
         zero_to_sixty: double.parse(_zeroToSixtyController.text),
       );
-
-      CarService().addCar(newCar).then((_) => Navigator.pop(context));
+      BlocProvider.of<CarBloc>(context).add(AddCar(newCar));
+      Navigator.of(context).pop();
     }
 
   }

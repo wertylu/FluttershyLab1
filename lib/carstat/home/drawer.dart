@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:my_project/carstat/app/profile.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -13,8 +12,8 @@ class CustomDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const UserAccountsDrawerHeader(
-            accountName: Text('User Name'),
-            accountEmail: Text('user@example.com'),
+            accountName: Text(''),
+            accountEmail: Text(''),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('assets/placeholder.png'),
             ),
@@ -29,7 +28,7 @@ class CustomDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (context) => const ProfilePage(),
+                  builder: (context) => const UserProfilePage(),
                 ),
               );
             },

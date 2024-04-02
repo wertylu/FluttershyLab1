@@ -22,7 +22,7 @@ class CarLocalStorage {
     if (jsonDataList == null) return [];
     return jsonDataList
         .map((jsonData) =>
-            Car.fromJson(jsonDecode(jsonData) as Map<String, dynamic>))
+            Car.fromJson(jsonDecode(jsonData) as Map<String, dynamic>),)
         .toList();
   }
 
