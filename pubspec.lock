@@ -105,6 +105,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  flash_light_control_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "57ca6aff5f6ea1ae9c455d66042061fffefc0782"
+      url: "https://github.com/wertylu/flashlight.git"
+    source: git
+    version: "0.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
